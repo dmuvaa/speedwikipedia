@@ -14,6 +14,9 @@ const sourceSerif = Source_Serif_4({
 const themeScript = `(function(){try{var t=localStorage.getItem("speedwikipedia-theme");var root=document.documentElement;if(t==="dark"){root.classList.add("dark");root.classList.remove("light");}else if(t==="light"){root.classList.add("light");root.classList.remove("dark");}}catch(e){}})();`;
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://speedwikipedia.vercel.app",
+  ),
   title: {
     default: "SpeedWikipedia",
     template: "%s · SpeedWikipedia",

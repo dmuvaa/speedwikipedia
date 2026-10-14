@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { ButtonLink } from "@/components/button";
 import { MODE_META } from "@/lib/modes";
+import { absoluteUrl } from "@/lib/site";
 import { GAME_MODES, type GameMode, type SearchHit } from "@/lib/types";
 import { playHref, titlesMatch } from "@/lib/titles";
 
@@ -84,7 +85,7 @@ function CopyLink({ href }: { href: string }) {
       type="button"
       className="pressable inline-flex min-h-11 items-center rounded-full px-3 text-sm text-muted hover:bg-soft hover:text-ink"
       onClick={async () => {
-        const url = `${window.location.origin}${href}`;
+        const url = absoluteUrl(href);
         try {
           await navigator.clipboard.writeText(url);
           setCopied(true);

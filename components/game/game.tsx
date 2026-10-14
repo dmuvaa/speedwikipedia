@@ -13,6 +13,7 @@ import { fetchArticleWithRetry, loadCachedArticle, warmArticle } from "@/lib/art
 import { pickQuickChallenge } from "@/lib/challenges";
 import { scoreRun } from "@/lib/score";
 import { readBest, recordFinish, recordStart } from "@/lib/stats";
+import { absoluteUrl } from "@/lib/site";
 import { playHref, titlesMatch } from "@/lib/titles";
 import type { Article, Difficulty, GameMode, PathStep, PersonalBest, ScoreBreakdown } from "@/lib/types";
 
@@ -91,7 +92,7 @@ function GameSession({
   const startTitle = path[0]?.title ?? start;
   const shareUrl =
     phase === "won" || phase === "lost"
-      ? `${window.location.origin}${playHref({ start: startTitle, target: targetTitle, mode, difficulty })}`
+      ? absoluteUrl(playHref({ start: startTitle, target: targetTitle, mode, difficulty }))
       : "";
 
   useEffect(() => {
