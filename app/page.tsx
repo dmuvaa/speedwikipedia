@@ -24,7 +24,10 @@ export default function HomePage() {
               <QuickPlayButton className="pressable inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-accent bg-accent px-8 text-base font-semibold text-accent-ink shadow-[0_1px_0_rgb(0_0_0/10%)] hover:opacity-90 sm:w-auto">
                 Quick play
               </QuickPlayButton>
-              <ButtonLink href="/create" variant="secondary" className="min-h-12 w-full px-6 sm:w-auto">
+              <ButtonLink href="/how-to-play" variant="secondary" className="min-h-12 w-full px-6 sm:w-auto">
+                How to play
+              </ButtonLink>
+              <ButtonLink href="/create" variant="ghost" className="min-h-12 w-full px-6 sm:w-auto">
                 Make your own
               </ButtonLink>
             </div>

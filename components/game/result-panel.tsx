@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/button";
 import { formatClock, formatPrecise, formatScore, pluralClicks } from "@/lib/format";
 import { MODE_META } from "@/lib/modes";
+import { scorePercent } from "@/lib/score";
 import { challengeShareText, resultShareText, shareLinks } from "@/lib/share";
 import type { GameMode, PathStep, PersonalBest, ScoreBreakdown } from "@/lib/types";
 
@@ -74,26 +75,18 @@ export function ResultPanel({
         </p>
       </div>
 
-      <dl className="grid grid-cols-3 gap-2">
+      <dl className="grid grid-cols-2 gap-2">
         <Stat label="Clicks" value={limit == null ? String(clicks) : `${clicks}/${limit}`} />
         <Stat label="Time" value={formatPrecise(timeMs)} />
-        <Stat label="Score" value={score ? formatScore(score.total) : "—"} highlight={Boolean(won && score)} />
       </dl>
+
+      {score && won ? <ScoreBar score={score} /> : null}
 
       {(bestNote || !won) && (
         <p className={`text-sm ${bestNote === "New personal best" ? "font-semibold text-signal" : "text-muted"}`}>
           {bestNote ?? `${MODE_META[mode].label}. You reached ${reached}.`}
         </p>
       )}
-
-      {score ? (
-        <dl className="rounded-xl border border-line bg-card px-3">
-          <BreakdownRow label="Base" value={formatScore(score.base)} />
-          <BreakdownRow label="Difficulty" value={`+${formatScore(score.difficultyBonus)}`} />
-          <BreakdownRow label="Clicks" value={`−${formatScore(score.clickPenalty)}`} />
-          <BreakdownRow label="Time" value={`−${formatScore(score.timePenalty)}`} last />
-        </dl>
-      ) : null}
 
       <div className="flex gap-2">
         <Button onClick={onReplay} className="min-h-11 flex-1">
@@ -117,7 +110,7 @@ export function ResultPanel({
                 }`}
               >
                 <span className="min-w-0 truncate">{step.title}</span>
-                <time className="shrink-0 text-xs tabular-nums">{formatClock(step.atMs)}</time>
+                <time className="shrink-0 text-xs tabular-nums text-muted">{formatClock(step.atMs)}</time>
               </li>
             );
           })}
@@ -139,6 +132,50 @@ export function ResultPanel({
           <span> · CC BY-SA 4.0</span>
         </p>
       ) : null}
+    </div>
+  );
+}
+
+function ScoreBar({ score }: { score: ScoreBreakdown }) {
+  const percent = scorePercent(score);
+  const lostToClicks = score.clickPenalty;
+  const lostToTime = score.timePenalty;
+
+  return (
+    <div className="rounded-2xl border border-line bg-card px-4 py-4">
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="text-sm font-semibold text-ink">Run score</p>
+        <p className="text-sm tabular-nums text-muted">
+          <span className="font-bold text-ink">{formatScore(score.total)}</span>
+          <span aria-hidden="true"> / </span>
+          <span className="sr-only"> out of </span>
+          {formatScore(score.ceiling)}
+        </p>
+      </div>
+      <div
+        className="mt-3 h-3 overflow-hidden rounded-full bg-soft"
+        role="meter"
+        aria-valuemin={0}
+        aria-valuemax={score.ceiling}
+        aria-valuenow={score.total}
+        aria-label={`Score ${formatScore(score.total)} of ${formatScore(score.ceiling)}`}
+      >
+        <div
+          className="h-full rounded-full bg-accent transition-[width] duration-500 ease-out"
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+      <p className="mt-2 text-sm text-muted">
+        You kept <strong className="font-semibold text-ink">{percent}%</strong> of the max for this
+        difficulty. Fewer clicks and a faster finish fill the bar.
+      </p>
+      {(lostToClicks > 0 || lostToTime > 0) && (
+        <p className="mt-1.5 text-xs text-muted">
+          Lost {lostToClicks > 0 ? `${formatScore(lostToClicks)} to clicks` : null}
+          {lostToClicks > 0 && lostToTime > 0 ? " · " : null}
+          {lostToTime > 0 ? `${formatScore(lostToTime)} to time` : null}
+        </p>
+      )}
     </div>
   );
 }
@@ -168,23 +205,6 @@ function Stat({
       >
         {value}
       </dd>
-    </div>
-  );
-}
-
-function BreakdownRow({
-  label,
-  value,
-  last = false,
-}: {
-  label: string;
-  value: string;
-  last?: boolean;
-}) {
-  return (
-    <div className={`flex justify-between gap-3 py-2 text-sm ${last ? "" : "border-b border-line"}`}>
-      <dt className="text-muted">{label}</dt>
-      <dd className="font-semibold text-ink tabular-nums">{value}</dd>
     </div>
   );
 }

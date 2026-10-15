@@ -43,6 +43,8 @@ export type ScoreBreakdown = {
   clickPenalty: number;
   timePenalty: number;
   total: number;
+  /** Max possible for this run (base + difficulty). */
+  ceiling: number;
 };
 
 export type PathStep = {

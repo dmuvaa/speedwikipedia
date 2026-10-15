@@ -55,7 +55,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Suspense fallback={<div className="site-chrome h-14" />}>
           <SiteHeader />
         </Suspense>
-        <div id="content" className="flex min-h-0 flex-1 flex-col">
+        <div id="content" className="flex flex-1 flex-col">
           {children}
         </div>
         <SiteFooter />

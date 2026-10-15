@@ -61,7 +61,7 @@ async function PlaySession({
 
 function PlayFallback() {
   return (
-    <div data-screen="game" className="flex min-h-0 flex-1 flex-col px-4 py-8">
+    <div data-screen="game" className="flex flex-1 flex-col px-4 py-8">
       <ArticleSkeleton />
     </div>
   );
@@ -69,15 +69,18 @@ function PlayFallback() {
 
 function PlayMessage({ title, body }: { title: string; body: string }) {
   return (
-    <main data-screen="game" className="mx-auto flex min-h-0 flex-1 max-w-xl flex-col justify-center px-4">
-      <h1 className="font-serif text-5xl leading-none">{title}</h1>
+    <main data-screen="game" className="mx-auto flex max-w-xl flex-1 flex-col justify-center px-4 py-12">
+      <h1 className="font-serif text-4xl leading-none text-ink sm:text-5xl">{title}</h1>
       <p className="mt-4 text-muted">{body}</p>
-      <p className="mt-6 flex gap-4 text-sm">
+      <p className="mt-6 flex flex-wrap gap-4 text-sm font-semibold text-ink">
         <Link href="/" className="underline underline-offset-4">
           Home
         </Link>
         <Link href="/challenges" className="underline underline-offset-4">
           Challenges
+        </Link>
+        <Link href="/how-to-play" className="underline underline-offset-4">
+          How to play
         </Link>
       </p>
     </main>

@@ -5,9 +5,9 @@ const variants = {
   primary:
     "border border-accent bg-accent text-accent-ink shadow-[0_1px_0_rgb(0_0_0/10%)] hover:opacity-90",
   secondary:
-    "border border-line bg-card text-ink shadow-[0_1px_0_rgb(0_0_0/6%)] hover:bg-soft hover:border-[color-mix(in_srgb,var(--ink)_22%,var(--line))]",
+    "border border-line bg-card text-ink shadow-[0_1px_0_rgb(0_0_0/6%)] hover:bg-soft hover:border-[color-mix(in_srgb,var(--ink)_28%,var(--line))]",
   ghost:
-    "border border-line bg-transparent text-ink shadow-[0_1px_0_rgb(0_0_0/4%)] hover:bg-card",
+    "border border-line bg-card/60 text-ink shadow-[0_1px_0_rgb(0_0_0/4%)] hover:bg-card",
 };
 
 const base =

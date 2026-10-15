@@ -78,7 +78,6 @@ function GameSession({
   const [reloadKey, setReloadKey] = useState(0);
   const recorded = useRef(false);
   const started = useRef(false);
-  const scroller = useRef<HTMLDivElement>(null);
   const pendingNav = useRef<{ title: string; hash: string | null } | null>(null);
   const navigating = useRef(false);
   const pathRef = useRef(path);
@@ -174,7 +173,7 @@ function GameSession({
     setPhase(won ? "won" : "lost");
     setPathOpen(false);
     setGiveUpOpen(false);
-    scroller.current?.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0 });
   }
 
   async function navigate(title: string, hash: string | null) {
@@ -202,7 +201,7 @@ function GameSession({
       setArticle(next);
       setPath(nextPath);
       setScrollHash(hash);
-      if (!hash) scroller.current?.scrollTo({ top: 0 });
+      if (!hash) window.scrollTo({ top: 0 });
       if (titlesMatch(next.title, targetTitleRef.current)) {
         finish(true, nextClicks, atMs);
         return;
@@ -249,8 +248,8 @@ function GameSession({
   }
 
   return (
-    <div data-screen="game" className="flex min-h-0 flex-1 flex-col overflow-hidden bg-paper">
-      <header className="hud-glass z-20 shrink-0">
+    <div data-screen="game" className="flex flex-1 flex-col bg-paper">
+      <header className="hud-glass sticky top-[3.55rem] z-20 shrink-0 sm:top-[3.75rem]">
         <div className="flex items-center justify-between gap-2 px-3 py-2 sm:gap-3 sm:px-4 sm:py-2.5">
           <p className="min-w-0 truncate text-sm text-muted sm:text-[0.95rem]">
             {phase === "playing" || phase === "loading" ? (
@@ -261,7 +260,7 @@ function GameSession({
               "Run finished"
             )}
           </p>
-          <div className="scoreboard shrink-0" aria-live="polite">
+          <div className="scoreboard shrink-0 text-ink" aria-live="polite">
             <span className="ticks">{limit == null ? clicks : `${clicks}/${limit}`}</span>
             <span className="text-sm text-muted">{limit == null ? "clicks" : "used"}</span>
             <span className="text-muted" aria-hidden="true">
@@ -282,13 +281,12 @@ function GameSession({
       </header>
 
       <div
-        className={`flex min-h-0 flex-1 flex-col ${
+        className={`flex flex-1 flex-col ${
           phase === "playing" || phase === "loading" ? "lg:grid lg:grid-cols-[minmax(0,1fr)_21rem]" : ""
         }`}
       >
         <div
-          ref={scroller}
-          className={`min-h-0 flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6 lg:px-8 ${
+          className={`flex-1 px-3 py-4 pb-24 sm:px-6 sm:py-6 lg:px-8 lg:pb-8 ${
             phase === "playing" || phase === "loading" ? "bg-[#f8f9fa]" : "bg-paper"
           }`}
         >
@@ -358,8 +356,8 @@ function GameSession({
         </div>
 
         {phase === "playing" || phase === "loading" ? (
-          <aside className="hidden border-l border-line/80 bg-card/40 lg:block lg:overflow-y-auto">
-            <div className="flex min-h-full flex-col p-5">
+          <aside className="hidden border-l border-line/80 bg-card/40 lg:block">
+            <div className="sticky top-[7.5rem] flex flex-col p-5">
               <p className="text-sm font-medium text-muted">Finish line</p>
               <h2 className="mt-2 font-serif text-3xl leading-none font-semibold">{targetTitle}</h2>
               <div className="race-line mt-5">
@@ -376,7 +374,7 @@ function GameSession({
                 <PathList path={path} />
               </div>
               {phase === "playing" ? (
-                <Button variant="secondary" className="mt-auto" onClick={() => setGiveUpOpen(true)}>
+                <Button variant="secondary" className="mt-8" onClick={() => setGiveUpOpen(true)}>
                   Give up
                 </Button>
               ) : null}
@@ -386,7 +384,7 @@ function GameSession({
       </div>
 
       {phase === "playing" ? (
-        <div className="hud-glass grid grid-cols-2 gap-2 border-t border-line/70 p-2 lg:hidden">
+        <div className="hud-glass fixed inset-x-0 bottom-0 z-20 grid grid-cols-2 gap-2 border-t border-line p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] lg:hidden">
           <Button variant="secondary" onClick={() => setPathOpen(true)}>
             Path
           </Button>
